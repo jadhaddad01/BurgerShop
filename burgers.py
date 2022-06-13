@@ -9,7 +9,9 @@ orderList = []
 # ORDER OBJECT -> [Main], [Side], etc etc
 # ORDER LIST (people ordering) -> [ORDER1, ORDER2, ORDER3]
 
+
 # Classes
+# -------
 
 
 class FoodItem:
@@ -36,10 +38,12 @@ class Order:
     loyaltyNum = 0
     price = 0
 
+    # constructor
     def __init__(self, loyaltyNum, price):
         self.loyaltyNum = loyaltyNum
         self.price = price
 
+    # getters and setters
     def getLoyaltyNum(self):
         return self.loyaltyNum
 
@@ -71,13 +75,7 @@ def user_input_combo():
     # a combo must include one burger, one side, and one drink
     return c
 
-
-def take_order():
-    # ask user for name for the order
-    # repeat taking order until client is done
-    # display order details
-    # display a thank you message
-    print("Welcome to Burger Shop")
+# print all receipts for multiple orders
 
 
 def receipt_print(OrderList):
@@ -89,6 +87,8 @@ def receipt_print(OrderList):
         # print a receipt HERE MAROUCH
         print("Loyalty Num:", i.getLoyaltyNum())
         print("Price:", price)
+
+        # Print a wifi password randomly generated.
 
 
 # Welcome
@@ -112,6 +112,7 @@ while True:
     except:
         print('Please enter a valid number of people that are ordering.')
 
+# how many orders
 for i in range(people):
     # loyalty number - registration or usage (choose not to use it) for point system
     #   age of client saved with the data
