@@ -1,7 +1,6 @@
 # Variables
 # ---------
 
-price = 0
 # how many orders
 people = 0
 
@@ -35,6 +34,17 @@ class Combo(FoodItem):
 
 class Order:
     loyaltyNum = 0
+    price = 0
+
+    def __init__(self, loyaltyNum, price):
+        self.loyaltyNum = loyaltyNum
+        self.price = price
+
+    def getLoyaltyNum(self):
+        return self.loyaltyNum
+
+    def getPrice(self):
+        return self.price
 
 
 def user_input_burger():
@@ -71,8 +81,12 @@ def take_order():
 
 
 def receipt_print(OrderList):
+    # MAROUCHE HERE
     for i in OrderList:
-        print(i)
+
+        # print a receipt HERE MAROUCH
+        print("Loyalty Num:", i.getLoyaltyNum())
+        print("Price:", i.getPrice())
 
 
 # Welcome
@@ -100,7 +114,6 @@ for i in range(people):
     # loyalty number - registration or usage (choose not to use it) for point system
     #   age of client saved with the data
 
-    print(i)
     # order taking
     #   system to check combos, discounts
     #   discounts are stackable
@@ -130,4 +143,6 @@ for i in range(people):
 
     # receipt (wifi generated daily) - split the tab or all together.
 
+    order1 = Order(10, 10001)
+    orderList.append(order1)
     receipt_print(orderList)
