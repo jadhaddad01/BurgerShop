@@ -84,9 +84,11 @@ def receipt_print(OrderList):
     # MAROUCHE HERE
     for i in OrderList:
 
+        price = i.getPrice()
+
         # print a receipt HERE MAROUCH
         print("Loyalty Num:", i.getLoyaltyNum())
-        print("Price:", i.getPrice())
+        print("Price:", price)
 
 
 # Welcome
@@ -143,6 +145,6 @@ for i in range(people):
 
     # receipt (wifi generated daily) - split the tab or all together.
 
-    order1 = Order(10, 10001)
+    order1 = Order(123456, 40)
     orderList.append(order1)
     receipt_print(orderList)
