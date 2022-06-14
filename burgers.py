@@ -125,9 +125,8 @@ def receipt_print(OrderList):
         Total = Subtotal + Tax
         print('\t\t\tTotal before tip '':', Total, "$")
 
-        Tip =(tipAmount/100)*Total
         while True:
-            tipAmount = input("Tip: 0%, 10%, 15%, 20% or custom? :")
+            tipAmount = input("Tip: 0%, 10%, 15%, 20% or custom: ")
             try:
                 # check if integer
                 tipAmount = int(tipAmount)
@@ -139,13 +138,13 @@ def receipt_print(OrderList):
             except:
                 print('Please enter a valid number for tip.')
 
-        if tipAmount == 0: 
-            print ('You're not leaving a tip? You cheapskate.')
-            Tip=0 
-        else: 
-            print ('Thank you for tip') 
-            Tip =(tipAmount/100)*Total
-      
+        if tipAmount == 0:
+            print("You're not leaving a tip? You cheapskate.")
+            Tip = 0
+        else:
+            print('Thank you for tip')
+            Tip = round((tipAmount/100)*Total, 2)
+
         print('\t\t\tTip'':', Tip, "$")
         FinalTotal = Total + Tip
 
