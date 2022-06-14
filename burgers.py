@@ -82,23 +82,19 @@ def user_input_combo():
 
 # print all receipts for multiple orders
 
+
 def receipt_print(OrderList):
     # MAROUCHE HERE
     for i in OrderList:
 
-        price = i.getPrice()
+        Subtotal = i.getPrice()
 
-        # print a receipt HERE MAROUCH
-        print("Loyalty Num:", i.getLoyaltyNum())
-        print("Price:", price)
-
-        ## MAROUCHE ADDED THE FOLLOWING: 
-        
+        # MAROUCHE ADDED THE FOLLOWING:
 
         company_name = 'BURGER SHOP '
         company_address = '155 BOUL ST-CATHERINE'
         company_city = 'MONTREAL'
-        message1= 'RECEIPT'
+        message1 = 'RECEIPT'
         message2 = 'ENJOY YOUR MEAL !'
 
         print('*' * 50)
@@ -111,82 +107,79 @@ def receipt_print(OrderList):
         print('=' * 50)
 
         e = datetime.datetime.now()
-        print ("Order's date: " + e.strftime("%Y-%m-%d %H:%M:%S"))
+        print("Order's date: " + e.strftime("%Y-%m-%d %H:%M:%S"))
+        # Loyalty number
+        print("Loyalty Num:", i.getLoyaltyNum())
         print('=' * 50)
-
 
         print('\t\t{}'.format(message1))
         print("")
 
+        print('\t\t\tSubtotal'':', Subtotal, "$")
 
-        def receipt_print(OrderList):
-            # MAROUCHE HERE
-            for i in OrderList:
-
-                price = i.getPrice()
-
-                # print a receipt HERE MAROUCH
-
-                print("Loyalty Num:", i.getLoyaltyNum())
-                print("Price:", price)
-
-        Subtotal= 100 
-
-        print('\t\t\tSubtotal'':',Subtotal, "$")
-
-        Tax  = Subtotal*0.13
-        print('\t\t\tTax'':', Tax, "$" )
+        Tax = Subtotal*0.13
+        print('\t\t\tTax'':', Tax, "$")
 
         Total = Subtotal + Tax
         print('\t\t\tTotal before tip '':', Total, "$")
 
-        FinalTotal =0
-        tip10 = Total * .10
-        tip15 = Total * .15
-        tip20 = Total * .20
-        Tip=0
+        # FinalTotal = 0
+        # tip10 = Total * .10
+        # tip15 = Total * .15
+        # tip20 = Total * .20
+        # Tip = 0
 
-        tipAmount = int (input("Tip: 0%, 10%, 15%, 20% ? :"))
+        while True:
+            tipAmount = input("Tip: 0%, 10%, 15%, 20% or custom? :")
+            try:
+                # check if integer
+                tipAmount = int(tipAmount)
+                # check if positive
+                if(tipAmount < 0):
+                    print('Please enter a valid number for tip.')
+                    continue
+                break
+            except:
+                print('Please enter a valid number for tip.')
 
-        if tipAmount == 10:
-            Tip=tip10
-            #FinalTotal = Total + tip10
-        elif tipAmount == 15:
-            Tip=tip15
-            #FinalTotal = Total + tip15
-        elif tipAmount == 20:
-            Tip=tip20
-           #FinalTotal = Total + tip20
-        else:
-            print("You're not leaving a tip? You cheapskate.")
-            Tip=0
+        # tipAmount if 0 cheapskate and tip =0
+        # otherwise tip = total * tipamount / 100
 
+        Tip = 0
+
+        # if tipAmount == 10:
+        #     Tip = tip10
+        #     #FinalTotal = Total + tip10
+        # elif tipAmount == 15:
+        #     Tip = tip15
+        #     #FinalTotal = Total + tip15
+        # elif tipAmount == 20:
+        #     Tip = tip20
+        #    #FinalTotal = Total + tip20
+        # else:
+        #     print("You're not leaving a tip? You cheapskate.")
+        #     Tip = 0
 
         print('\t\t\tTip'':', Tip)
         FinalTotal = Total + Tip
 
         print('*' * 50)
-        print('\t\t\tFinal Total '':',FinalTotal)
+        print('\t\t\tFinal Total '':', FinalTotal)
 
-        #CREATE RANDOM WI-FI PASSWORD 
+        # CREATE RANDOM WI-FI PASSWORD
 
-        length = int (10)
+        length = int(10)
         letter = string.ascii_letters
         num = string.digits
         all = letter + num
-        temp = random.sample(all,length)
+        temp = random.sample(all, length)
         password = "".join(temp)
 
-
         print('*' * 50)
-        print ("To connect to WI-FI use this password :", password)
-        print ("")
+        print("To connect to WI-FI use this password :", password)
+        print("")
         print('\t\t{}\n'.format(message2))
         print('*' * 50)
-
-        
-        
-        # Print a wifi password randomly generated.
 
 
 # Welcome
