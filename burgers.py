@@ -125,12 +125,7 @@ def receipt_print(OrderList):
         Total = Subtotal + Tax
         print('\t\t\tTotal before tip '':', Total, "$")
 
-        # FinalTotal = 0
-        # tip10 = Total * .10
-        # tip15 = Total * .15
-        # tip20 = Total * .20
-        # Tip = 0
-
+        Tip =(tipAmount/100)*Total
         while True:
             tipAmount = input("Tip: 0%, 10%, 15%, 20% or custom? :")
             try:
@@ -144,29 +139,18 @@ def receipt_print(OrderList):
             except:
                 print('Please enter a valid number for tip.')
 
-        # tipAmount if 0 cheapskate and tip =0
-        # otherwise tip = total * tipamount / 100
-
-        Tip = 0
-
-        # if tipAmount == 10:
-        #     Tip = tip10
-        #     #FinalTotal = Total + tip10
-        # elif tipAmount == 15:
-        #     Tip = tip15
-        #     #FinalTotal = Total + tip15
-        # elif tipAmount == 20:
-        #     Tip = tip20
-        #    #FinalTotal = Total + tip20
-        # else:
-        #     print("You're not leaving a tip? You cheapskate.")
-        #     Tip = 0
-
-        print('\t\t\tTip'':', Tip)
+        if tipAmount == 0: 
+            print ('You're not leaving a tip? You cheapskate.')
+            Tip=0 
+        else: 
+            print ('Thank you for tip') 
+            Tip =(tipAmount/100)*Total
+      
+        print('\t\t\tTip'':', Tip, "$")
         FinalTotal = Total + Tip
 
         print('*' * 50)
-        print('\t\t\tFinal Total '':', FinalTotal)
+        print('\t\t\tFinal Total '':', FinalTotal, "$")
 
         # CREATE RANDOM WI-FI PASSWORD
 
