@@ -18,26 +18,28 @@ orderList = []
 # Classes
 # -------
 
-
-class FoodItem:
+class MainDish():
     pass
 
 
-class Burger(FoodItem):
+class Drink():
     pass
 
 
-class Drink(FoodItem):
+class Side():
     pass
 
 
-class Side(FoodItem):
+class Desert():
     pass
 
 
-class Combo(FoodItem):
+class Combo():
     pass
 
+
+# condiments
+# temperature
 
 class Order:
     loyaltyNum = 0
