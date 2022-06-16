@@ -233,14 +233,16 @@ class Order:
         self.food.append(foodObject)
         self.price += foodObject.getPrice()
 
-    def getNamePriceFoodObjects(self):
+    def getNamePriceTypeFoodObjects(self):
         tmp = []
         tmp2 = []
+        tmp3 = []
         for i in self.food:
             tmp.append(i.getName())
             tmp2.append(i.getPrice())
+            tmp3.append(i.getType())
 
-        return tmp, tmp2
+        return tmp, tmp2, tmp3
 
 
 # Methods
@@ -384,9 +386,19 @@ def receipt_print(OrderList):
         print("")
 
         # MAROUCH RECEIPT PUT BELOW RECEIPT HERRRRRRRREEEEEEEEEEE
-        n, p = i.getNamePriceFoodObjects()
-        for j in range(len(n)):
-            print(n[j], p[j])
+        nameO, priceO, typeO = i.getNamePriceTypeFoodObjects()
+        for j in range(len(nameO)):
+            # if it is combo
+            if (typeO[j] == "Combo"):
+                for k, val in enumerate(nameO[j]):
+                    # each item in combo
+                    print(val)
+                # price of total combo
+                print(priceO[j])
+            # if not combo
+            else:
+                # print name and price of each item
+                print(nameO[j], priceO[j])
 
         print('\t\t\tSubtotal'':', Subtotal, "$")
 
