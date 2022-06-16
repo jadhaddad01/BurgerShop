@@ -357,7 +357,7 @@ def receipt_print(OrderList):
     # MAROUCHE HERE
     for i in OrderList:
 
-        Subtotal = i.getPrice()
+        Subtotal = round(i.getPrice(), 2)
 
         # MAROUCHE ADDED THE FOLLOWING:
 
@@ -366,7 +366,7 @@ def receipt_print(OrderList):
         company_city = 'MONTREAL'
         message1 = 'RECEIPT'
         message2 = 'ENJOY YOUR MEAL !'
-
+        message3= 'YOU ORDERED:'
         print('*' * 50)
 
         # print company information first using format
@@ -381,9 +381,11 @@ def receipt_print(OrderList):
         # Loyalty number
         print("Loyalty Num:", i.getLoyaltyNum())
         print('=' * 50)
-
-        print('\t\t{}'.format(message1))
+        print('\t\t\t{}'.format(message1))
+        print('=' * 50)
+        print (message3)
         print("")
+    
 
         # MAROUCH RECEIPT PUT BELOW RECEIPT HERRRRRRRREEEEEEEEEEE
         nameO, priceO, typeO = i.getNamePriceTypeFoodObjects()
@@ -394,16 +396,17 @@ def receipt_print(OrderList):
                     # each item in combo
                     print(val)
                 # price of total combo
-                print(priceO[j])
+                print('** Price of the combo .........:', round((priceO[j]),2), '$')
             # if not combo
             else:
                 # print name and price of each item
-                print(nameO[j], priceO[j])
-
-        print('\t\t\tSubtotal'':', Subtotal, "$")
+                print(nameO[j],':..................', priceO[j], '$')
+        print('')
+        print('-' * 50)
+        print('\t\t\tSubtotal'':         ', Subtotal, "$")
 
         Tax = round(Subtotal*0.13, 2)
-        print('\t\t\tTax'':', Tax, "$")
+        print('\t\t\tTax'':              ', Tax, "$")
 
         Total = round(Subtotal + Tax, 2)
         print('\t\t\tTotal before tip '':', Total, "$")
@@ -415,13 +418,14 @@ def receipt_print(OrderList):
             Tip = 0
         else:
             print('Thank you for tip')
-            Tip = (tipAmount/100)*Total
+            Tip = round(((tipAmount/100)*Total), 2)
 
-        print('\t\t\tTip'':', Tip, "$")
+        print('\t\t\tTip'':              ', Tip, "$")
         FinalTotal = round(Total + Tip, 2)
 
-        print('*' * 50)
-        print('\t\t\tFinal Total '':', FinalTotal, "$")
+        print('-' * 50)
+        print('\t\t\tFinal Total '':     ', FinalTotal, "$")
+        print("")
 
         # CREATE RANDOM WI-FI PASSWORD
 
