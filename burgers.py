@@ -393,8 +393,23 @@ def checkCombo(orderList):
 
 
 def receipt_print(OrderList):
+    pay = validNumBetween(
+        0, 1, "\nWould you like to:\n0: Pay Seperately\n1: Pay as a Single Order \nPlease choose your choice: ")
+
+    newOrderList = OrderList
+
+    # If pay as single order
+    if pay == 1:
+        newOrderList = [Order(100, 0, [])]
+        for i in OrderList:
+            # get food object list
+            food = i.getFood()
+
+            for j in food:
+                newOrderList[0].appendFood(j)
+
     # MAROUCHE HERE
-    for i in OrderList:
+    for i in newOrderList:
         print("\n")
 
         Subtotal = round(i.getPrice(), 2)
