@@ -420,19 +420,32 @@ def user_input_combo():
 
 
 def listItem(o):
-    name, _, _ = o.getNamePriceTypeFoodObjects()
+    name, _, typee = o.getNamePriceTypeFoodObjects()
 
     print("\nItems on Order:")
-    for _, val in enumerate(name):
-        print(val)
+    for i, val in enumerate(name):
+        if typee[i] == "Combo":
+            print("Combo")
+            print("-----")
+            for j in val:
+                print(j)
+            print("-----")
+        else:
+            print(val)
 
 
 def removeItem(o):
-    name, _, _ = o.getNamePriceTypeFoodObjects()
+    name, _, typee = o.getNamePriceTypeFoodObjects()
 
     print("\nItems to Delete:")
     for i, val in enumerate(name):
-        print("{}: {}".format(i, val))
+        if typee[i] == "Combo":
+            print(i, ": ", end="")
+            for j in val:
+                print(j, end=" ")
+            print("")
+        else:
+            print("{}: {}".format(i, val))
 
     rem = validNumBetween(
         0, len(name)-1, "Choose what to delete: ")
@@ -580,10 +593,10 @@ def receipt_print(OrderList, people, birthDiscount):
 
         # WIFI PASS
         print('*' * 50)
-        print("Points received: {}".format(FinalTotal))
+        print("Points received: {}".format(int(FinalTotal)))
         print("Points used: {}".format(p*100))
         print("Your points after the order: {}".format(
-            loy[2]+FinalTotal-(p*100)))
+            loy[2]+int(FinalTotal)-(p*100)))
 
         # save new points
         loy[2] = loy[2]+FinalTotal-(p*100)
@@ -648,11 +661,11 @@ for i in range(people):
                 print("Please input a valid date.")
 
         if loyalty == []:
-            loy.append(birth.strftime("%d%m%y"))
+            loy.append(birth.strftime("%d%m"))
             loy.append(1000)
             loy.append(100)
         else:
-            loy.append(birth.strftime("%d%m%y"))
+            loy.append(birth.strftime("%d%m"))
             loy.append(loyalty[-1][1]+1)
             loy.append(100)
 
@@ -671,13 +684,15 @@ for i in range(people):
                     flag = False
                     loy = val
                     ind = i
+                    # integer
+                    loy[2] = int(loy[2])
                     print(
                         "\nWelcome, you have {} points in your membership. Your number is {}".format(loy[2], loy[1]))
             if flag:
                 print("Membership not valid.")
 
     birthDiscount = False
-    if (y.strftime("%d%m%y") == loy[0]):
+    if (y.strftime("%d%m") == loy[0]):
         print("Happy Birthday!! You will receive 20% off today!")
         birthDiscount = True
 
