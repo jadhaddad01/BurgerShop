@@ -233,6 +233,14 @@ class Order:
         self.food.append(foodObject)
         self.price += foodObject.getPrice()
 
+    def getFood(self):
+        return self.food
+
+    def removeFoodAtIndex(self, index):
+        self.price -= self.food[index].getPrice()
+        f = self.food.pop(index)
+        return f
+
     def getNamePriceTypeFoodObjects(self):
         tmp = []
         tmp2 = []
@@ -350,12 +358,44 @@ def user_input_combo():
     c = Combo(main, side, drink)
     return c
 
+
+def checkCombo(orderList):
+    for i in orderList:
+        # get type of food
+        _, _, typee = i.getNamePriceTypeFoodObjects()
+
+        # get food object list
+        food = i.getFood()
+
+        # while combos are still available
+        while ("Main" in typee and "Side" in typee and "Drink" in typee):
+            index = typee.index("Main")
+            typee.pop(index)
+            mainFood = food[index]
+            i.removeFoodAtIndex(index)
+
+            index = typee.index("Side")
+            typee.pop(index)
+            mainSide = food[index]
+            i.removeFoodAtIndex(index)
+
+            index = typee.index("Drink")
+            typee.pop(index)
+            mainDrink = food[index]
+            i.removeFoodAtIndex(index)
+
+            # create combo after removing food from all lists
+            c = Combo(mainFood, mainSide, mainDrink)
+            # add combo to order
+            i.appendFood(c)
+
 # print all receipts for multiple orders
 
 
 def receipt_print(OrderList):
     # MAROUCHE HERE
     for i in OrderList:
+        print("\n")
 
         Subtotal = round(i.getPrice(), 2)
 
@@ -366,7 +406,7 @@ def receipt_print(OrderList):
         company_city = 'MONTREAL'
         message1 = 'RECEIPT'
         message2 = 'ENJOY YOUR MEAL !'
-        message3= 'YOU ORDERED:'
+        message3 = 'YOU ORDERED:'
         print('*' * 50)
 
         # print company information first using format
@@ -383,9 +423,8 @@ def receipt_print(OrderList):
         print('=' * 50)
         print('\t\t\t{}'.format(message1))
         print('=' * 50)
-        print (message3)
+        print(message3)
         print("")
-    
 
         # MAROUCH RECEIPT PUT BELOW RECEIPT HERRRRRRRREEEEEEEEEEE
         nameO, priceO, typeO = i.getNamePriceTypeFoodObjects()
@@ -396,11 +435,12 @@ def receipt_print(OrderList):
                     # each item in combo
                     print(val)
                 # price of total combo
-                print('** Price of the combo .........:', round((priceO[j]),2), '$')
+                print('** Price of the combo .........:',
+                      round((priceO[j]), 2), '$')
             # if not combo
             else:
                 # print name and price of each item
-                print(nameO[j],':..................', priceO[j], '$')
+                print(nameO[j], ':..................', priceO[j], '$')
         print('')
         print('-' * 50)
         print('\t\t\tSubtotal'':         ', Subtotal, "$")
@@ -484,5 +524,8 @@ for i in range(people):
             break
 
     orderList.append(o)
+
+# check for combos and make them
+checkCombo(orderList)
 
 receipt_print(orderList)
