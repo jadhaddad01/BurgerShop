@@ -2,6 +2,49 @@
 import datetime
 import random
 import string
+import os
+import pickle
+
+from flask import appcontext_popped
+
+# Wifi Password PRECODE
+y = datetime.datetime.now()
+
+# CREATE RANDOM WI-FI PASSWORD
+
+
+def passs():
+    length = int(10)
+    letter = string.ascii_letters
+    num = string.digits
+    all = letter + num
+    temp = random.sample(all, length)
+    password = "".join(temp)
+    return password
+
+
+wifiPass = [y.strftime("%d%m%y"), passs()]
+# Open wifi password file
+try:
+    with open(os.path.join("utils", "wifiPass.txt"), "rb") as fp:			# Load Pickle
+        wifiPass = pickle.load(fp)
+
+# If Not Found, Create a new python password file
+except Exception as e:
+    print("Saved Values File wifiPass.txt Not Found. Initializing to:")
+    print("	- Date:", wifiPass[0])
+    print("	- Password:", wifiPass[1])
+
+    with open(os.path.join("utils", "wifiPass.txt"), "wb") as fp:			# Save Pickle
+        pickle.dump(wifiPass, fp)
+
+# new date new pass
+if not (y.strftime("%d%m%y") == wifiPass[0]):
+    wifiPass[0] = y.strftime("%d%m%y")
+    wifiPass[1] = passs()
+    with open(os.path.join("utils", "wifiPass.txt"), "wb") as fp:			# Save Pickle
+        pickle.dump(wifiPass, fp)
+
 
 # Variables
 # ---------
@@ -255,6 +298,23 @@ class Order:
 
 # Methods
 # -------
+def validNumAbove(num, str):
+    while True:
+        retVal = input(str)
+        try:
+            # check if integer
+            retVal = int(retVal)
+            # check if positive
+            if(retVal > num):
+                print('Please enter a valid number.')
+                continue
+            break
+        except:
+            print('Please enter a valid number.')
+
+    return retVal
+
+
 def validNumBelow(num, str):
     while True:
         retVal = input(str)
@@ -359,6 +419,27 @@ def user_input_combo():
     return c
 
 
+def listItem(o):
+    name, _, _ = o.getNamePriceTypeFoodObjects()
+
+    print("\nItems on Order:")
+    for _, val in enumerate(name):
+        print(val)
+
+
+def removeItem(o):
+    name, _, _ = o.getNamePriceTypeFoodObjects()
+
+    print("\nItems to Delete:")
+    for i, val in enumerate(name):
+        print("{}: {}".format(i, val))
+
+    rem = validNumBetween(
+        0, len(name)-1, "Choose what to delete: ")
+
+    o.removeFoodAtIndex(rem)
+
+
 def checkCombo(orderList):
     for i in orderList:
         # get type of food
@@ -392,21 +473,22 @@ def checkCombo(orderList):
 # print all receipts for multiple orders
 
 
-def receipt_print(OrderList):
-    pay = validNumBetween(
-        0, 1, "\nWould you like to:\n0: Pay Seperately\n1: Pay as a Single Order \nPlease choose your choice: ")
-
+def receipt_print(OrderList, people, birthDiscount):
     newOrderList = OrderList
+    if not (people == 1):
+        print("\n")
+        pay = validNumBetween(
+            0, 1, "Would you like to:\n0: Pay Seperately\n1: Pay as a Single Order \nPlease choose your choice: ")
 
-    # If pay as single order
-    if pay == 1:
-        newOrderList = [Order(100, 0, [])]
-        for i in OrderList:
-            # get food object list
-            food = i.getFood()
+        # If pay as single order
+        if pay == 1:
+            newOrderList = [Order(loy[1], 0, [])]
+            for i in OrderList:
+                # get food object list
+                food = i.getFood()
 
-            for j in food:
-                newOrderList[0].appendFood(j)
+                for j in food:
+                    newOrderList[0].appendFood(j)
 
     # MAROUCHE HERE
     for i in newOrderList:
@@ -435,6 +517,7 @@ def receipt_print(OrderList):
         print("Order's date: " + e.strftime("%Y-%m-%d %H:%M:%S"))
         # Loyalty number
         print("Loyalty Num:", i.getLoyaltyNum())
+        print("Loyalty points:", loy[2])
         print('=' * 50)
         print('\t\t\t{}'.format(message1))
         print('=' * 50)
@@ -460,6 +543,19 @@ def receipt_print(OrderList):
         print('-' * 50)
         print('\t\t\tSubtotal'':         ', Subtotal, "$")
 
+        if birthDiscount:
+            sub = round(Subtotal*0.2, 2)
+            Subtotal = round(Subtotal*0.8, 2)
+            print('\t\t\tBirthday Discount: -{}$'.format(sub))
+            print('\t\t\tNew Subtotal:     ', Subtotal, "$")
+
+        p = int(loy[2]//100)
+        if(p > 0):
+            sub = round(p*5, 2)
+            Subtotal = round(Subtotal-sub, 2)
+            print("Loyalty points discount ({} points used): -{}$".format(p*100, sub))
+            print('\t\t\tNew Subtotal:     ', Subtotal, "$")
+
         Tax = round(Subtotal*0.13, 2)
         print('\t\t\tTax'':              ', Tax, "$")
 
@@ -482,17 +578,20 @@ def receipt_print(OrderList):
         print('\t\t\tFinal Total '':     ', FinalTotal, "$")
         print("")
 
-        # CREATE RANDOM WI-FI PASSWORD
-
-        length = int(10)
-        letter = string.ascii_letters
-        num = string.digits
-        all = letter + num
-        temp = random.sample(all, length)
-        password = "".join(temp)
-
+        # WIFI PASS
         print('*' * 50)
-        print("To connect to WI-FI use this password :", password)
+        print("Points received: {}".format(FinalTotal))
+        print("Points used: {}".format(p*100))
+        print("Your points after the order: {}".format(
+            loy[2]+FinalTotal-(p*100)))
+
+        # save new points
+        loy[2] = loy[2]+FinalTotal-(p*100)
+        loyalty[ind][2] = loy[2]
+        with open(os.path.join("utils", "loyalty.txt"), "wb") as fp:			# Save Pickle
+            pickle.dump(loyalty, fp)
+
+        print("To connect to WI-FI use this password :", wifiPass[1])
         print("")
         print('\t\t{}\n'.format(message2))
         print('*' * 50)
@@ -512,19 +611,80 @@ people = validNumBelow(1, "How may people are ordering? ")
 for i in range(people):
     # loyalty number - registration or usage (choose not to use it) for point system
     #   age of client saved with the data
+    print("\nPerson #{}, welcome:".format(i+1))
 
-    # order taking
-    #   system to check combos, discounts
-    #   discounts are stackable
-    #   insert, edit, delete of order.
+    # Loyalty Number
+    loyalty = []
+    # Open loyalty file
+    try:
+        with open(os.path.join("utils", "loyalty.txt"), "rb") as fp:			# Load Pickle
+            loyalty = pickle.load(fp)
 
-    # receipt (wifi generated daily) - split the tab or all together.
-    print("\nPerson #{}, please order:".format(i+1))
+    # If Not Found, Create a new python loyalty file
+    except Exception as e:
+        print("Saved Values File loyalty.txt Not Found. Initializing")
+        with open(os.path.join("utils", "loyalty.txt"), "wb") as fp:			# Save Pickle
+            pickle.dump(loyalty, fp)
 
-    o = Order(100, 0, [])
+    # each loyalty membership has: birthday, loyalty number, loyalty points
+    loyaltyChoice = validNumBetween(0, 1, "\nAbdel-Loyalty Program (Every 100 points gets you 5$ off):\n"
+                                    "0: Create New Membership\n1: Enter Membership Number\nPlease choose your option: ")
+
+    loy = []
+    # if new membership index is last element
+    ind = -1
+    if loyaltyChoice == 0:
+        birth = None
+        while True:
+            birthyear = validNumAbove(
+                2022, "Please input your birth year: ")
+            birthmonth = validNumAbove(
+                12, "Please input your birth month: ")
+            birthday = validNumAbove(31, "Please input your birth day: ")
+            try:
+                birth = datetime.datetime(birthyear, birthmonth, birthday)
+                break
+            except:
+                print("Please input a valid date.")
+
+        if loyalty == []:
+            loy.append(birth.strftime("%d%m%y"))
+            loy.append(1000)
+            loy.append(100)
+        else:
+            loy.append(birth.strftime("%d%m%y"))
+            loy.append(loyalty[-1][1]+1)
+            loy.append(100)
+
+        loyalty.append(loy)
+        with open(os.path.join("utils", "loyalty.txt"), "wb") as fp:			# Save Pickle
+            pickle.dump(loyalty, fp)
+
+        print("You have been given 100 points as a sign-up bonus!")
+
+    elif loyaltyChoice == 1:
+        flag = True
+        while flag:
+            memNum = validNumBelow(1000, "Please enter your loyalty number: ")
+            for i, val in enumerate(loyalty):
+                if memNum == val[1]:
+                    flag = False
+                    loy = val
+                    ind = i
+                    print(
+                        "\nWelcome, you have {} points in your membership. Your number is {}".format(loy[2], loy[1]))
+            if flag:
+                print("Membership not valid.")
+
+    birthDiscount = False
+    if (y.strftime("%d%m%y") == loy[0]):
+        print("Happy Birthday!! You will receive 20% off today!")
+        birthDiscount = True
+
+    o = Order(loy[1], 0, [])
     while True:
-        menuchoice = validNumBetween(0, 5, "\nWhich menu you would like to order from?\n"
-                                     "0: Main Menu\n1: Drink Menu\n2: Side Menu\n3: Desert Menu\n4: 10% Discounted Combination (Main, Side, Drink) \n5: Finish\nPlease choose your option: ")
+        menuchoice = validNumBetween(0, 7, "\nWhich menu you would like to order from?\n"
+                                     "0: Main Menu\n1: Drink Menu\n2: Side Menu\n3: Desert Menu\n4: 10% Discounted Combination (Main, Side, Drink) \n5: List Items \n6: Delete Item\n7: Finish\nPlease choose your option: ")
         if menuchoice == 0:
             o.appendFood(user_input_main())
         elif menuchoice == 1:
@@ -535,6 +695,10 @@ for i in range(people):
             o.appendFood(user_input_desert())
         elif menuchoice == 4:
             o.appendFood(user_input_combo())
+        elif menuchoice == 5:
+            listItem(o)
+        elif menuchoice == 6:
+            removeItem(o)
         else:
             break
 
@@ -543,4 +707,4 @@ for i in range(people):
 # check for combos and make them
 checkCombo(orderList)
 
-receipt_print(orderList)
+receipt_print(orderList, people, birthDiscount)
