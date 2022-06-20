@@ -139,6 +139,7 @@ class Drink():
         {"name": "Adrian's Mother's Green Tea", "price": 4},
         {"name": "Sake", "price": 5},
         {"name": "Soft Drink", "price": 0},
+        {"name": "Coffee", "price": 0}
     ]
 
     soft = [
@@ -147,9 +148,16 @@ class Drink():
         {"name": "Miranda", "price": 2}
     ]
 
-    def __init__(self, option1, softselect):
+    coffee = [
+        {"name": "Ice Coffee", "price": 3},
+        {"name": "Espresso", "price": 3},
+        {"name": "Turkish", "price": 3}
+    ]
+
+    def __init__(self, option1, softselect, coffeeSelect):
         self.option1 = option1
         self.softselect = softselect
+        self.coffeeSelect = coffeeSelect
 
     # def getNamePrice(self):
     #     if(int(self.option1) == 2):
@@ -160,12 +168,19 @@ class Drink():
     def getName(self):
         if(int(self.option1) == 2):
             return self.soft[self.softselect]["name"]
+        elif(int(self.option1) == 3):
+            return self.coffee[self.softselect]["name"]
         else:
             return self.drink[self.option1]["name"]
 
     def getPrice(self):
         if(int(self.option1) == 2):
             return self.soft[self.softselect]["price"]
+        elif(int(self.option1) == 3):
+            if(int(self.coffeeSelect) == 0):
+                return 0
+            else:
+                return self.coffee[self.softselect]["price"]
         else:
             return self.drink[self.option1]["price"]
 
@@ -385,21 +400,30 @@ def user_input_sides():
 
 def user_input_drink():
     softselect = 0
+    coffeeSelect = 0
     while True:
         option1 = validNumBetween(
-            0, 2, "\nDrinking Menu:\n0: Adrian's Mother's Green Tea\n1: Sake\n2: Soft Drink \nPlease choose your order: ")
+            0, 3, "\nDrinking Menu:\n0: Adrian's Mother's Green Tea\n1: Sake\n2: Soft Drink\n3: Coffee\nPlease choose your order: ")
         if option1 == 1:
             option2 = validNumBelow(0, "What's your age? ")
             if option2 >= 18:
                 break
             else:
                 print("You are too young to drink, choose another ")
+        elif option1 == 3:
+            option2 = validNumBelow(0, "What's your age? ")
+            if option2 >= 18:
+                # 1 not free 0 free
+                coffeeSelect = 1
+            softselect = validNumBetween(
+                0, 2, "Would you like:\n0: Ice Coffee\n1: Espresso\n2: Turkish \nPlease choose your order: ")
+            break
         else:
             break
     if option1 == 2:
         softselect = validNumBetween(
             0, 2, "Would you like:\n0: Coke\n1: Japan Dry\n2: Miranda \nPlease choose your order: ")
-    d = Drink(option1, softselect)
+    d = Drink(option1, softselect, coffeeSelect)
     return d
 
 
@@ -615,7 +639,7 @@ def receipt_print(OrderList, people, birthDiscount):
 print("Welcome to Abdel-Cream's World Famous Deli")
 print("------------------------------------------\n")
 
-print("This is NOT a vegan-friendly restaurant. (Irvens, please exit or cops will be called for trespassing)")
+print("This is NOT a vegan-friendly restaurant. (Irvens, please exit)")
 
 # valid number of people ordering
 people = validNumBelow(1, "How may people are ordering? ")
